@@ -1,10 +1,7 @@
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-
-interface Data {
-    id: string;
-}
+import { Cliente, Data } from './types';
 
 
 // Función para obtener las credenciales desde Secret Manager
@@ -51,7 +48,7 @@ async function initializeServiceAccountAuth() {
     return serviceAccountAuth;
 }
 
-// Función para obtener la informaci{on de la hoja de calculo
+// Función para obtener los ids de campaña
 export async function getId(): Promise<Data[]> { 
 
     const serviceAccountAuth = await initializeServiceAccountAuth();
@@ -61,14 +58,33 @@ export async function getId(): Promise<Data[]> {
         await doc.loadInfo();
         const sheet = doc.sheetsByIndex[0];
         const rows = await sheet.getRows<Data>();
-        console.log(rows);
         return rows.map((row: GoogleSpreadsheetRow<Data>) => ({
             id: row.get('id'),
+            naming: row.get('naming'),
         }))
 
     } catch (error) {
         console.error('Error al obtener la información de la hoja de cálculo:', error);
         throw error;
     }
+};
 
-}
+// Función para obtener los clientes
+export async function getClient(): Promise<Cliente[]> { 
+
+    const serviceAccountAuth = await initializeServiceAccountAuth();
+    const doc = new GoogleSpreadsheet('1ANi49PJq7EM8ux4buo9smr7gEjsZ7YwI0BcHXCag2N0', serviceAccountAuth);
+
+    try {
+        await doc.loadInfo();
+        const sheet = doc.sheetsByIndex[0];
+        const rows = await sheet.getRows<Cliente>();
+        return rows.map((row: GoogleSpreadsheetRow<Cliente>) => ({
+            Clientes: row.get('Clientes'),
+        }))
+
+    } catch (error) {
+        console.error('Error al obtener la información de la hoja de cálculo:', error);
+        throw error;
+    }
+};
