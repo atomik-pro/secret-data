@@ -18,6 +18,7 @@ function FormRegister() {
     const [selectedClient, setSelectedClient] = useState<string>("");
     const [selectedId, setSelectedId] = useState<string>("");
     const [selectedChange, setSelectedChange] = useState<string>("");
+    const [selectedType, setSelectedType] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +78,7 @@ function FormRegister() {
         setSelectedId(e.target.value);
         setSelectedClient(e.target.value);
         setSelectedChange(e.target.value);
+        setSelectedType(e.target.value);
     };
 
     return (
@@ -131,7 +133,7 @@ function FormRegister() {
                     {/* AJUSTE OPTIONS */}
                     <select
                         className="text-left px-2 py-1 h-12 w-1/3 rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom"
-                        value={selectedId}
+                        value={selectedChange}
                         onChange={handleSelectChange}
                     >
                         <option value="nulo">¿Que ajuste desea registrar?</option>
@@ -139,6 +141,7 @@ function FormRegister() {
                         <option className="font-bold" value="Consumo">Consumo</option>
                         <option className="font-bold" value="Ambas">Ambas</option>
                     </select>
+                    {/* TIPO SEGUN ELECCION OPTIONS */}
                     {selectedChange && (
                         <>
                             {selectedChange === 'Objetivo' && (
@@ -161,15 +164,37 @@ function FormRegister() {
                                     required
                                 />
                             )}
+                            {selectedChange === 'Ambas' && (
+                                <>
+                                    <div className="flex justify-between">
+                                        <input
+                                            type="number"
+                                            name='numeroMultiplicar'
+                                            id='numeroMultiplicar'
+                                            className='text-left px-2 py-1 h-12 w-[45%] rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
+                                            placeholder='Ajuste de objetivo'
+                                            required
+                                        />
+                                        <input
+                                            type="number"
+                                            name='ajusteConsumo'
+                                            id='ajusteConsumo'
+                                            className='text-left px-2 py-1 h-12 w-[45%] rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
+                                            placeholder='Ajuste de consumo'
+                                            required
+                                        />
+
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
-                    {/* TIPO SEGUN ELECCION OPTIONS */}
                 </div>
                 <div className="flex justify-around p-2">
                     {/* DIARIO OPTIONS */}
                     <select
                         className="text-left px-2 py-1 h-12 w-1/3 rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom"
-                        value={selectedId}
+                        value={selectedType}
                         onChange={handleSelectChange}
                     >
                         <option value="">¿El ajuste es diario o total campaña?</option>
