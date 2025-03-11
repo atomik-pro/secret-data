@@ -49,7 +49,7 @@ async function initializeServiceAccountAuth() {
 }
 
 // Función para obtener los ids de campaña
-export async function getId(): Promise<Data[]> { 
+export async function getId(): Promise<Data[]> {
 
     const serviceAccountAuth = await initializeServiceAccountAuth();
     const doc = new GoogleSpreadsheet('1brW36BuFfrYxvxf4YYJYifB8XrQY0KYbIv7g08drJ5I', serviceAccountAuth);
@@ -70,7 +70,7 @@ export async function getId(): Promise<Data[]> {
 };
 
 // Función para obtener los clientes
-export async function getClient(): Promise<Cliente[]> { 
+export async function getClient(): Promise<Cliente[]> {
 
     const serviceAccountAuth = await initializeServiceAccountAuth();
     const doc = new GoogleSpreadsheet('1ANi49PJq7EM8ux4buo9smr7gEjsZ7YwI0BcHXCag2N0', serviceAccountAuth);
@@ -88,3 +88,48 @@ export async function getClient(): Promise<Cliente[]> {
         throw error;
     }
 };
+
+export async function postRegisterData(
+    id: string,
+    cliente: string,
+    ajuste: string,
+    numeroMultiplicar: string,
+    ajusteConsumo: string,
+    observaciones: string,
+    tipoAjuste: string,
+
+): Promise<void> {
+    const serviceAccountAuth = await initializeServiceAccountAuth();
+    const doc = new GoogleSpreadsheet('11Db3XP8CgA5t0N59YYtohPTIGdpEHWqvZ1ylTo3-q90', serviceAccountAuth);
+
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    try {
+        await doc.loadInfo();
+        const sheet = doc.sheetsByTitle['app'];
+
+        // Verificar si la hoja existe
+        if (!sheet) {
+            throw new Error('No se encontró la hoja con el nombre especificado');
+        }
+
+        // Crear el objeto con los datos a insertar
+        const newRowData = {
+            fechaSolicitud: currentDate,
+            identificadorCampana: id,
+            cliente: cliente,
+            ajuste: ajuste,
+            numeroMultiplicar: numeroMultiplicar,
+            ajusteConsumo: ajusteConsumo,
+            observaciones: observaciones,
+            tipoAjuste: tipoAjuste
+        };
+
+        // Añadir la nueva fila al final
+        await sheet.addRow(newRowData);
+
+    } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        throw error;
+    }
+}
