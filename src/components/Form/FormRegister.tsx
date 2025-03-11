@@ -34,7 +34,6 @@ function FormRegister() {
                 throw new Error('Error en la respuesta del servidor');
             }
             const data = await res.json();
-            console.log('Datos recibidos:', data);
             setClientes(data);
         } catch (error) {
             console.error('Error al obtener los IDs:', error);
@@ -51,7 +50,6 @@ function FormRegister() {
                 throw new Error('Error en la respuesta del servidor');
             }
             const data = await response.json();
-            console.log('Datos recibidos:', data);
             setIds(data);
         } catch (error) {
             console.error('Error al obtener los IDs:', error);
@@ -155,7 +153,6 @@ function FormRegister() {
             }
 
             const result = await response.json();
-            console.log("Respuesta del servidor:", result);
 
             // Opcional: resetear el formulario
             setSelectedClient("");
