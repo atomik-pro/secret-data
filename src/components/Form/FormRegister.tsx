@@ -21,6 +21,9 @@ function FormRegister() {
     const [selectedType, setSelectedType] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isIdDropdownOpen, setIsIdDropdownOpen] = useState(false);
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const fetchClientData = async () => {
@@ -57,6 +60,19 @@ function FormRegister() {
         }
     }
 
+    // Filtrar IDs basados en el término de búsqueda
+    const filteredIds = ids.filter(item => 
+        item && item.id && typeof item.id === 'string' && 
+        item.id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Manejar la selección de un ID desde la lista desplegable
+    const handleIdSelect = (id: string) => {
+        setSelectedId(id);
+        setSearchTerm(id);
+        setIsIdDropdownOpen(false);
+    };
+
     // Cargar datos cuando se abre el dropdown
     useEffect(() => {
         fetchIdData();
@@ -74,6 +90,7 @@ function FormRegister() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -194,26 +211,74 @@ function FormRegister() {
                         ))}
                     </select>
                     {/* IDS OPTIONS */}
-                    <select
-                        className="text-left px-2 py-1 h-12 w-1/3 rounded-md text-violetaPrincipal shadow-custom border border-gray-200 font-semibold cursor-pointer"
-                        name="id"
-                        disabled={isLoading}
-                        value={selectedId}
-                        onChange={handleSelectChange}
+                    <div
+                        className="flex items-center text-left px-2 py-1 h-12 w-1/3 rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom"
+                        onClick={() => {
+                            setIsIdDropdownOpen(!isIdDropdownOpen);
+                            setTimeout(() => {
+                                searchInputRef.current?.focus();
+                            }, 100);
+                        }}
                     >
-                        <option value="">
-                            {isLoading ? 'Cargando...' : 'Seleccione el identificador'}
-                        </option>
-                        {ids.map((item) => (
-                            <option
-                                key={item.id}
-                                value={item.id}
-                                className="font-bold"
-                            >
-                                {item.id}
-                            </option>
-                        ))}
-                    </select>
+                        <input
+                            ref={searchInputRef}
+                            type="text"
+                            className="w-full bg-transparent outline-none"
+                            placeholder={isLoading ? 'Cargando...' : 'Buscar identificador...'}
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setIsIdDropdownOpen(true);
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsIdDropdownOpen(true);
+                            }}
+                            disabled={isLoading}
+                        />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 text-violetaPrincipal"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d={isIdDropdownOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
+                            />
+                        </svg>
+                    </div>
+
+                    {/* Lista desplegable de opciones filtradas */}
+                    {isIdDropdownOpen && (
+                        <div className="absolute z-10 mt-14 right-44 bg-blanco w-1/12 rounded-md shadow-lg max-h-60 overflow-auto">
+                            {filteredIds.length > 0 ? (
+                                filteredIds.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="text-left px-2 py-1 rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom"
+                                        onClick={() => handleIdSelect(item.id)}
+                                    >
+                                        {item.id}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-4 py-2 text-gray-500">
+                                    No se encontraron resultados
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {/* Campo oculto para mantener la compatibilidad con la validación del formulario */}
+                    <input
+                        type="hidden"
+                        name="id"
+                        value={selectedId}
+                        required
+                    />
                 </div>
                 <div className="relative flex justify-around p-2">
                     {/* AJUSTE OPTIONS */}
