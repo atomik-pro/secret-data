@@ -300,6 +300,7 @@ function FormRegister() {
                                         type="number"
                                         name='numeroMultiplicar'
                                         id='numeroMultiplicar'
+                                        step="any"
                                         className='text-left px-2 py-1 h-12 w-full rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
                                         placeholder='Número a multiplicar'
                                         required
@@ -310,6 +311,7 @@ function FormRegister() {
                                         type="number"
                                         name='ajusteConsumo'
                                         id='ajusteConsumo'
+                                        step="any"
                                         className='text-left px-2 py-1 h-12 w-full rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
                                         placeholder='Factor multiplicador a usar'
                                         required
@@ -321,6 +323,7 @@ function FormRegister() {
                                             type="number"
                                             name='numeroMultiplicar'
                                             id='numeroMultiplicar'
+                                            step="any"
                                             className='text-left px-2 py-1 h-12 w-[45%] rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
                                             placeholder='Ajuste de objetivo'
                                             required
@@ -329,6 +332,7 @@ function FormRegister() {
                                             type="number"
                                             name='ajusteConsumo'
                                             id='ajusteConsumo'
+                                            step="any"
                                             className='text-left px-2 py-1 h-12 w-[45%] rounded-md text-violetaPrincipal border border-gray-200 font-semibold cursor-pointer shadow-custom'
                                             placeholder='Ajuste de consumo'
                                             required
